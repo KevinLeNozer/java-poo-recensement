@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import fr.diginamic.recensement.entites.Recensement;
 import fr.diginamic.recensement.entites.Ville;
+import fr.diginamic.recensement.services.exception.RegexException;
 
 /**
  * Recherche et affichage de toutes les villes d'un département dont la
@@ -17,20 +18,26 @@ import fr.diginamic.recensement.entites.Ville;
 public class RecherchePopulationBorneService extends MenuService {
 
 	@Override
-	public void traiter(Recensement rec, Scanner scanner) {
+	public void traiter(Recensement rec, Scanner scanner)throws RegexException {
 
 		System.out.println("Quel est le code du département recherché ? ");
 		String choix = scanner.nextLine();
 
 		System.out.println("Choississez une population minimum (en milliers d'habitants): ");
 		String saisieMin = scanner.nextLine();
+
+
 		
 		System.out.println("Choississez une population maximum (en milliers d'habitants): ");
 		String saisieMax = scanner.nextLine();
 
+		if(saisieMin.matches("[A-Za-z]*$") || saisieMax.matches("[A-Za-z]*$")) {
+			throw new RegexException("N'accepte pas les lettres !");
+		}
+
 		int min = Integer.parseInt(saisieMin) * 1000;
 		int max = Integer.parseInt(saisieMax) * 1000;
-		
+
 		List<Ville> villes = rec.getVilles();
 		for (Ville ville : villes) {
 			if (ville.getCodeDepartement().equalsIgnoreCase(choix)) {
@@ -39,6 +46,8 @@ public class RecherchePopulationBorneService extends MenuService {
 				}
 			}
 		}
+
+
 	}
 
 }
